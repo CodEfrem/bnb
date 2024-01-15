@@ -1,3 +1,27 @@
+h1, h2, h3, h4, h5,h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+}
+
+
 body {
-    background-color: skyblue;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+}
+
+img {
+    transition: all 700ms ease-in;
+    -webkit-transition: all 700ms ease-in;
+    -moz-transition: all 700ms ease-in;
+    -ms-transition: all 700ms ease-in;
+    -o-transition: all 700ms ease-in;
+}
+
+img:hover {
+    transform: scale (0.9);
+    -webkit-transform: scale (0.9);
+    -moz-transform: scale (0.9);
+    -ms-transform: scale (0.9);
+    -o-transform: scale (0.9);
+    transition: all 700ms ease-out;
 }

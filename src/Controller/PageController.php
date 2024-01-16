@@ -15,4 +15,15 @@ class PageController extends AbstractController
             
         ]);
     }
+
+
+
+    #[Route('/email', name: 'email')]
+    public function email(): Response
+    {
+        return $this->render('registration/confirmation_email.html.twig', [
+            'signedUrl' => 'https://exemple.com/signed-url',
+            
+        ]);
+    }
 }

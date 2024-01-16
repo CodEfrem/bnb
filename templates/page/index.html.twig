@@ -1,34 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Paris{% endblock %}
-
-{% block body %}
-
-
-
-<div class="container-fluid vh-100 bg-body-tertiary">
-    <div class="d-flex justify-content-center align-items-center pt-5">
-        <div class_"card rounded-4 shadow-lg p-4 d-flex align-items-center justify-content-center"><img src={{ asset('/images/default-1.jpg') }} 
-        width="200"
-        class="border-2 border-light rounded-circle shadow"
-        >
-        <h1>Paris</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima explicabo mollitia non veritatis vero. At.</p>
-        <p></p>
-        <p>&copy; {{ 'now' |date('Y') }}</p>
-        </div>
-    </div>
-</div>
-
-{% set name = 'Matin' %}
-
-{% if name == 'Martin' %}
-    <h2>Bonjour {{ name }} !</h2>
-    {% else %}
-    <h2>C'est pas {{ name }} !<h2>
-
-    {%endif%}
-
+{% block title %}Paris
 {% endblock %}
 
+{% set paragraph = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae reprehenderit consequatur et repellat earum, ex provident illo iure! Aliquam vitae enim eligendi in quidem ullam tempora beatae est quae animi!' %}
 
+{% block body %}
+	<div class="container-fluid vh-100 bg-body-tertiary">
+		<div class="d-flex justify-content-center align-items-center pt-5">
+            <div class="card col-4 text-center rounded-4 shadow-lg p-4 d-flex align-items-center justify-content-center">
+            	<img src={{ asset('/images/default-1.jpg') }} 
+                width="200" class="border-2 border-light rounded-circle shadow">
+	            <h1>Paris</h1>
+                <p>{{ paragraph|slice(1,150) }}...</p>
+                <p>&copy; {{ 'now'|date('Y') }}</p>
+            </div>
+        </div>
+	</div>
+{% endblock %}

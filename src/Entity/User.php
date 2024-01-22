@@ -32,7 +32,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 50, nullable: true)]
-    private ?string $fisrtname = null;
+    private ?string $firstname = null;
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $lastname = null;
@@ -61,17 +61,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'traveler', targetEntity: Review::class, orphanRemoval: true)]
     private Collection $reviews;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Booking::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'traveler', targetEntity: Booking::class, orphanRemoval: true)]
     private Collection $bookings;
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
+
+    #[ORM\OneToMany(mappedBy: 'traveler', targetEntity: Favorite::class, orphanRemoval: true)]
+    private Collection $favorites;
 
     public function __construct()
     {
         $this->rooms = new ArrayCollection();
         $this->reviews = new ArrayCollection();
         $this->bookings = new ArrayCollection();
+        $this->favorites = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -144,14 +148,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getFisrtname(): ?string
+    public function getFirstname(): ?string
     {
-        return $this->fisrtname;
+        return $this->firstname;
     }
 
-    public function setFisrtname(?string $fisrtname): static
+    public function setFirstname(?string $firstname): static
     {
-        $this->fisrtname = $fisrtname;
+        $this->firstname = $firstname;
 
         return $this;
     }
@@ -312,7 +316,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->bookings->contains($booking)) {
             $this->bookings->add($booking);
-            $booking->setUser($this);
+            $booking->setTraveler($this);
         }
 
         return $this;
@@ -322,8 +326,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->bookings->removeElement($booking)) {
             // set the owning side to null (unless already changed)
-            if ($booking->getUser() === $this) {
-                $booking->setUser(null);
+            if ($booking->getTraveler() === $this) {
+                $booking->setTraveler(null);
             }
         }
 
@@ -341,4 +345,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Favorite>
+     */
+    public function getFavorites(): Collection
+    {
+        return $this->favorites;
+    }
+
+    public function addFavorite(Favorite $favorite): static
+    {
+        if (!$this->favorites->contains($favorite)) {
+            $this->favorites->add($favorite);
+            $favorite->setTraveler($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavorite(Favorite $favorite): static
+    {
+        if ($this->favorites->removeElement($favorite)) {
+            // set the owning side to null (unless already changed)
+            if ($favorite->getTraveler() === $this) {
+                $favorite->setTraveler(null);
+            }
+        }
+
+        return $this;
+    }
+
+    
 }

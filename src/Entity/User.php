@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
@@ -20,15 +21,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    private ?string $email = null;
+    #[Assert\Email(
+        message: 'The email "{{ value }}" is not a valid email. Try again.',
+        )]
+    
+    private ? string $email = null;
 
     #[ORM\Column]
     private array $roles = [];
 
+
+
     /**
      * @var string The hashed password
      */
-    #[ORM\Column]
+
+     #[ORM\Column]
+     #[Assert\Regex(
+     pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+     message: 'Your password must contain : at least 1 uppercase letter, 1 lowercase lettre, 1 number, at least 1 special character, at least 8 characters'
+     )]
     private ?string $password = null;
 
     #[ORM\Column(length: 50, nullable: true)]
@@ -172,6 +184,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    // Fusion : Fistname + Lastname
+    public function getFullname(): string
+    {
+        return $this->firstname . ' ' . $this->lastname;
+    }
+
+    // Current year minus birthyear to get age
+    public function getAge(): ?int
+    {
+        return date('Y') - $this->birthyear;
+    }
+    
     public function getBirthyear(): ?int
     {
         return $this->birthyear;
@@ -183,6 +207,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
 
     public function getAddress(): ?string
     {
@@ -375,6 +400,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-    
 }

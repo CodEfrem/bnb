@@ -5,6 +5,12 @@ namespace App\Controller;
 use App\Form\ProfileType;
 use App\Service\ProfileService;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,6 +36,31 @@ class UserController extends AbstractController
         return $this->render('user/profile.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+ //Method that configures the fields displayde on the CRUD page and the index page
+ public function configureFields(string $pageName): iterable
+ {
+     return [
+         ImageField::new('image','Profile picture')
+         ->setBasePath('uploads/users/')
+         ->setUploadDir('public/uploads/users/'),
+         TextField::new('email','Email address'),
+         TextField::new('firstname','FirstName'),
+         TextField::new('lastname','LastName'),
+         IntegerField::new('birthyear','Birth year'),
+     ];
+ }
+
+     
+
+    //Method that configures the actions available for this entity (Show, Edit, Delete)
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+            ->setPermission(Action::DELETE, 'ROLE_SUPER_ADMIN')
+            ;
     }
 
     /**

@@ -40,10 +40,6 @@ class Booking
     #[ORM\JoinColumn(nullable: false)]
     private ?Room $room = null;
 
-    #[ORM\ManyToOne(inversedBy: 'bookings')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -145,15 +141,23 @@ class Booking
         return $this;
     }
 
-    public function getUser(): ?User
+    // Convert checkin date to string
+    public function getCheckInString(): string
     {
-        return $this->user;
+        return $this->getCheckIn()->format('d/m/Y');
     }
 
-    public function setUser(?User $user): static
+    // Convert checkout date to string
+    public function getCheckOutString(): string
     {
-        $this->user = $user;
-
-        return $this;
+        return $this->getCheckOut()->format('d/m/Y');
     }
+
+    // Get the number of days between checkin and checkout
+    public function getDays(): int
+    {
+        $diff = $this->getCheckIn()->diff($this->getCheckOut());
+        return $diff->days;
+    }
+
 }
